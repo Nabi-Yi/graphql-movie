@@ -30,6 +30,23 @@ const typeDefs = gql`
     }
 `;
 
+
+const resolvers = {
+    Query: {
+        allMovies() {
+            return fetch("https://yts.mx/api/v2/list_movies.json")
+                .then((r) => r.json())
+                .then((json) => json.data.movies);
+        },
+
+        movie(_,{id}){
+            return fetch(`https://yts.mx/api/v2/movie_details.json?movie_id=${id}`)
+                .then((r) => r.json())
+                .then((json) => json.data.movie);
+        }
+    }
+}
+
 const server = new ApolloServer({typeDefs, resolvers});
 server.listen().then(({url}) => {
     console.log(`Running on ${url}`);
